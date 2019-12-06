@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div id="app">
+    <div class="header-wrap">
+        <span class="scroll" id="scroll">
+          <div class="item" v-for="item in arr">{{item}}</div>
+        </span>
+    </div>
+  </div>
+  <script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+  <script>
+    const vm = new Vue({
+      el: "#app",
+      data: {
+        arr: new Array(100),
+        name: "leo",
+        timer: null
+      },
+      mounted() {
+        this.arr = new Array(100).fill(1).map((item, index) => {
+          return `${this.name}${index}`
+        })
+        const scroll = document.querySelector('#scroll')
+        let i = 0
+        setInterval(() => {
+          i++
+          scroll.style.marginLeft = `-${85*i}px`
+        }, 1000)
+      },
+      methods: {
+        unshiftFunc() {
+          this.timer = setInterval(() => {
+            // 显示长度
+            if (this.arr > 4) {
+              this.arr.shift()
+            } else {
+              clearInterval(this.timer)
+              this.timer = null
+            }
+          }, 1000)
+        }
+      },
+    })
+  </script>
+</body>
+
+</html>

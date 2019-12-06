@@ -1,0 +1,24 @@
+body {
+  background: #000;
+}
+.header-wrap {
+  width: 420px;
+  overflow: hidden;
+  white-space: nowrap;
+  background: #fff;
+}
+
+.item {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  line-height: 80px;
+  margin-right: 5px;
+  background: red;
+  text-align: center;
+  display: inline-block;
+}
+
+.scroll {
+  transition: all 1s;
+}
