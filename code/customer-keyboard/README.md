@@ -1,5 +1,7 @@
 # customer-keyboard
 
+### 自定义输入框，自带光标，可自定义键盘内容
+
 ## Project setup
 ```
 npm install
