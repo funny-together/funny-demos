@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    body {
+      background: #1a1a1a;
+      text-align: center;
+    }
+
+    .container {
+      color: #fff;
+      height: 30vh;
+      line-height: 30vh;
+      font: 700 128px "Comic Sans MS";
+      margin-top: 30vh;
+    }
+    #start {
+      margin-top: 20px;
+      width: 100px;
+      height: 100px;
+      outline: none;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      color: #fff;
+      background: linear-gradient(rgb(248, 97, 97), rgb(210, 12, 236));
+      font-size: 22px;
+      text-shadow: 0px 2px 1px grey;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="count">
+  </div>
+  <button id="start">开始</button>
+  <script>
+    const start = document.querySelector("#start"),
+          count = document.querySelector("#count")
+    let init = 7 * 60, isWarn = false, timer = null, isPlay = false
+    function generate() {
+      if (init < 0) {
+        clearInterval(timer)
+        count.innerHTML = "时间到！！"
+        return 
+      }
+
+      if (init <= 5 && !isPlay) {
+        playMusic()
+        isPlay = true
+      }
+
+      let timeStr = '', m = 0, s = 0
+      if (init >= 60) {
+        m = parseInt(init / 60)
+      } else {
+        isWarn = true
+      }
+      s = init - m*60
+      s = s >= 10 ? s : `0${s}`
+      timeStr = `${m}:${s}`
+      count.innerHTML = timeStr
+      if (isWarn) {
+        count.style.color = "red"
+      }
+    }
+
+    /*
+      播放音乐
+      */
+    function playMusic() {
+      var audioCtx = new AudioContext()
+      var oscillator = audioCtx.createOscillator();
+      // 创建一个GainNode,它可以控制音频的总音量
+      var gainNode = audioCtx.createGain();
+      // 把音量，音调和终节点进行关联
+      oscillator.connect(gainNode);
+      // audioCtx.destination返回AudioDestinationNode对象，表示当前audio context中所有节点的最终节点，一般表示音频渲染设备
+      gainNode.connect(audioCtx.destination);
+      // 指定音调的类型，其他还有square|triangle|sawtooth
+      oscillator.type = 'sine';
+      // 设置当前播放声音的频率，也就是最终播放声音的调调
+      oscillator.frequency.value = 196.00;
+      // 当前时间设置音量为0
+      gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+      // 0.01秒后音量为1
+      gainNode.gain.linearRampToValueAtTime(1, audioCtx.currentTime + 0.01);
+      // 音调从当前时间开始播放
+      oscillator.start(audioCtx.currentTime);
+      // 1秒内声音慢慢降低，是个不错的停止声音的方法
+      gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1);
+      // 1秒后完全停止声音
+      oscillator.stop(audioCtx.currentTime + 1);
+      if (init === 0) return 
+      setTimeout(() => {
+        playMusic()
+      }, 1000)
+    }
+
+    generate();
+
+    start.addEventListener("click", e => {
+      timer = setInterval(() => {
+        init--;
+        generate()
+      }, 1000)
+    }, {
+      once: true
+    });
+
+  </script>
+</body>
+</html>
